@@ -1,16 +1,14 @@
-# Stage 1: Java install + compile
-FROM openjdk:17-jdk-slim AS java-builder
+# Java + Node একসাথে লাগলে
+FROM openjdk:17-jdk-slim
+
+# Node install
+RUN apt-get update && apt-get install -y curl \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY . .
-# যদি Java কোড থাকে, compile করো
-# RUN javac Main.java
-
-# Stage 2: Node.js runtime
-FROM node:18-slim
-WORKDIR /app
-COPY . .
-# যদি Java builder থেকে কিছু দরকার হয়:
-# COPY --from=java-builder /app/Main.class /app/
-
 RUN npm install
+
 CMD ["node", "server.js"]
