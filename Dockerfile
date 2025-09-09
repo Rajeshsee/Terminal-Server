@@ -1,20 +1,31 @@
-# Node.js image ব্যবহার করুন
+# Node.js base image
 FROM node:18
 
-# Java (OpenJDK 17) install করুন
-RUN apt-get update && apt-get install -y openjdk-17-jdk
+# Install popular interpreters and compilers
+RUN apt-get update && \
+    apt-get install -y \
+    python3 python3-pip \
+    openjdk-17-jdk \
+    gcc g++ \
+    php \
+    ruby-full \
+    perl \
+    golang \
+    default-mysql-client \
+    sqlite3 \
+    && apt-get clean
 
-# কাজের ডিরেক্টরি সেট করুন
+# Set working directory
 WORKDIR /app
 
-# আপনার সব ফাইল কপি করুন
+# Copy all project files
 COPY . .
 
-# Node.js dependency install করুন
+# Install Node.js dependencies
 RUN npm install
 
-# পোর্ট এক্সপোজ করুন (যদি 3000 হয়)
+# Expose port (change if needed)
 EXPOSE 3000
 
-# অ্যাপ রান করুন
+# Run your Node.js server
 CMD ["node", "server.js"]
